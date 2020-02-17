@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Balance</title>
+    <link rel="stylesheet" href="./normalize.css">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="head">
+            <div class="container">
+                <div class="header">
+                    <div class="header_content">
+                        <h1>ACCOUNT BALANCE</h1>
+                        <form class="form">
+                            <fieldset class="fieldset">
+                                <legend>Input Data</legend>
+                                <div class="fieldset_content">
+                                    <div class="description">
+                                        <input type="text" id="description" placeholder="Description" required>
+                                    </div>
+                                    <div class="amount"><input type="text" id="amount" placeholder="Amount" required></div>
+
+                                    <!-- <div class="label"><label for="Income_expenditure">Select:</label></div>-->
+                                    <div class="select">
+                                        <select id="Income_expenditure">
+                                            <option selected>--Select--</option>
+                                            <option value="Income">Income</option>
+                                            <option value="Expenditure">Expenditure</option>
+                                        </select>
+                                    </div>
+                                    <input type="button" class="btn_submit" value="Add Data">
+                                    <input type="reset" value="Clear Input Field" class="btn_clear">
+                                </div>
+                                <!--<input type="button" value="Add Data" onclick="tableGenerator();">-->
+                            </fieldset>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="main">
+            <div class="container">
+                <div class="container_first">
+                    <div class="container_first--income">
+                        <h3 class="h3">INCOMES</h3>
+                        <table id="table_income">
+                            <tr>
+                                <th>Income Description</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Delete Row</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="container_first--expenditure">
+                        <h3 class="h3">EXPENSES</h3>
+                        <table id="table_expenditure">
+                            <tr>
+                                <th>Expenses Description</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Delete Row</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="container_second">
+                    <div class="container_second--income">
+                    </div>
+                    <div class="container_second--expenditure">
+                    </div>
+                    <input type="hidden" id="incomeInput">
+                    <input type="hidden" id="expenInput">
+                </div>
+                <div class="balance">
+                    <div class="balance_text">
+                        <h3 class="h3">BALANCE</h3>
+                    </div>
+                    <div class="balance_content">
+                        <p class="balance_output"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="container">
+                    <div class="footer_bottom">
+
+                        <div class="icon_group">
+                            <div class="bottom_icons">
+                                <div class="tweeter">
+                                    <a href="#"><img class="footer_bottom--subimg" src="./image/twitter.png"></a>
+                                </div>
+                            </div>
+                            <div class="bottom_icons">
+                                <div class="facebook">
+                                    <a href="#"><img class="footer_bottom--subimg" src="./image/facebook.png"></a>
+                                </div>
+                            </div>
+                            <div class="bottom_icons">
+                                <div class="linkedin">
+                                    <a href="#"><img class="footer_bottom--subimg" src="./image/linkedin.png"></a>
+                                </div>
+                            </div>
+
+                            <div class="bottom_icons">
+                                <div class="github">
+                                    <a href="#"><img class="footer_bottom--subimg" src="./image/github (1).png"></a>
+                                </div>
+                            </div>
+
+                            <div class="bottom_icons">
+                                <div class="pinterest">
+                                    <a href="#"><img class="footer_bottom--subimg" src="./image/pinterest.png"></a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--<div class="clearStorage">
+                            <a href="#"><img class="footer_bottom--subimg" src="./image/cancel.svg"></a>
+                      </div>-->
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+</body>
+<script src="cleave.js"></script>
+<script src="expenditure.js"></script>
+
+</html>
