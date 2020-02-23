@@ -1,2 +1,1 @@
-# account_balance
- mini app that calculate income and expenses
+https://stbugyei.github.io/account_balance.github.io/
