@@ -49,10 +49,10 @@ function addData() {
 }
 
 function addData1() {
-    let string = localStorage.getItem('localData');
+    let string1 = localStorage.getItem('localData');
     //===  convert string to array
-    if (string != null)
-        array1 = JSON.parse(string);
+    if (string1 != null)
+        array1 = JSON.parse(string1);
 }
 
 //========== addData to localStorage =======================
@@ -66,7 +66,7 @@ function pushIncomesData() {
     })
 
     //====== set items on localStorage
-    localStorage.setItem('localData', JSON.stringify(array))
+    localStorage.setItem('income', JSON.stringify(array))
     incomeGenerator();
 }
 
@@ -80,7 +80,7 @@ function pushExpenses() {
             amount: amount.value,
         })
         //====== set items on localStorage
-    localStorage.setItem('localData', JSON.stringify(array1))
+    localStorage.setItem('expenses', JSON.stringify(array1))
     ExpGenerator();
 }
 
