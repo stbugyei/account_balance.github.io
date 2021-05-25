@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account | Dashboard</title>
+    <link rel="stylesheet" href="./normalize.css">
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+        integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="account-wrapper">
+        <div class="header-content">
+            <h1>ACCOUNT BALANCE</h1>
+            <!-- dash board starts here -->
+            <div class="header-content">
+                <ul class="header-content__dash">
+                    <li>
+                        <button class="income-icon">
+                            <i class="fas fa-wallet"></i>
+                            <i class="fas fa-euro-sign"></i>
+                        </button>
+                        <p>Current Balance</p>
+                        <p class="curincome">0,00 €</p>
+                    </li>
+                    <li>
+                        <button class="income-icon">
+                            <i class="fas fa-euro-sign"></i>
+                            <i class="fas fa-coins"></i>
+                        </button>
+                        <p>Income</p>
+                        <p class="curincome">5.760,88 €</p>
+                    </li>
+                    <li>
+                        <button class="income-icon">
+                            <i class="fas fa-cart-arrow-down"></i>
+                        </button>
+                        <p>Expense</p>
+                        <p class="curiexpense">4.560,96 €</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="chart-wrapper">
+                <div class="barchart">
+                    <div class="barchart-content">
+                        <div class="income-height"></div>
+                        <div class="expense-height"></div>
+                    </div>
+                    <div class="barchart-legend">
+                        <span><i class="fas fa-circle"></i> Incomes</span>
+                        <span><i class="fas fa-circle"></i> Expenses</span>
+                    </div>
+                </div>
+                <div class="piechart">
+                    <div class="piechart-income__wrapper">
+                        <canvas id="incomepiechart" width="400" height="250"></canvas>
+                    </div>
+                    <div class="piechart-expense__wrapper">
+                        <canvas id="expensepiechart" width="400" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    </div>
+</body>
+<!-- <script src="cleave.js"></script> -->
+<script src="expenditure.js"></script>
+<script src="togglestyles.js"></script>
+
+</html>

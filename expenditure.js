@@ -1,309 +1,474 @@
-let incomeTable = document.getElementById('table_income');
-let expenseTable = document.getElementById('table_expenditure');
-const balance = document.querySelector('.balance_output')
-const description = document.querySelector('#description')
-const amount = document.querySelector('#amount')
-const totalIncome = document.querySelector('.container_second--income')
-const totalExpense = document.querySelector('.container_second--expenditure')
-const incomeInput = document.querySelector('#incomeInput')
-const expenInput = document.querySelector('#expenInput')
-const hiddenAmount = document.querySelector('.amount_hidden')
-const amountCell = document.getElementsByClassName('amount_cell')
-const amountCellB = document.getElementsByClassName('amount_cellB')
 
-let sum
+/*
+==============================================================
+declaring global variables
+==============================================================
+*/
+const incomeTable = document.getElementById('table_income');
+const expenseTable = document.getElementById('table_expenditure');
+const balance = document.querySelector('.balance_output');
+const curbalance = document.querySelector('.curbalance');
+const curincome = document.querySelector('.curincome');
+const curiexpense = document.querySelector('.curiexpense');
+const description = document.querySelector('#description');
+const amount = document.querySelector('#amount');
+const dateItm = document.querySelector('#date');
+const totalIncome = document.querySelector('.container_first--ivalue');
+const totalExpense = document.querySelector('.container_first--evalue');
+const fieldset = document.querySelector('.fieldset')
+const showFields = document.querySelector('.btn_trans')
+const btnSavInc = document.querySelector('.edit');
+const btnSavExp = document.querySelector('.editEx');
+const incomeLegend = document.getElementById("income-legend");
+const expenseLegend = document.getElementById("expense-legend");
+
 let rIndex
-let array = new Array();
-let array1 = new Array();
-addData();
-addData1();
-// ============== formating Date =======================
-
-let currentDate = new Date()
-let dateFormat = currentDate.getDate() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getFullYear() + " " + currentDate.getHours() + ":" + currentDate.getMinutes()
+let rIndex2
+let income_array = new Array();
+let expenses_array = new Array();
+getIncomeData();
+getExpenseData();
 
 
-// ============ Formating currency ==============================
-
-const formatter = new Intl.NumberFormat('fi-FI', { style: "currency", currency: "EUR" });
-
-/*new Cleave('#incomeInput', {
-    numeral: true,
-    numeralIntegerScale: 8,
-    prefix: '€',
-    signBeforePrefix: true
-});*/
-
-// ============ Formating currency ==============================
-
-
-
-
-///$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-function addData() {
-    let string = localStorage.getItem('localData');
-    //==== convert string to array
-    if (string != null)
-        array = JSON.parse(string);
+/*
+==============================================================
+formating Date
+==============================================================
+*/
+function getTime() {
+    let currentDate = new Date()
+    let dateFormat = currentDate.getDate() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getFullYear() + " " + currentDate.getHours() + ":" + currentDate.getMinutes()
+    return dateFormat;
 }
 
-function addData1() {
-    let string = localStorage.getItem('localData');
-    //===  convert string to array
-    if (string != null)
-        array1 = JSON.parse(string);
+/*
+==============================================================
+reset all input values to initial
+==============================================================
+*/
+function inputFields() {
+    description.value = "";
+    amount.value = "";
+    dateItm.value = "";
 }
 
-//========== addData to localStorage =======================
+/*
+==============================================================
+Formating currency
+==============================================================
+*/
+const formatter = new Intl.NumberFormat('de-DE', { style: "currency", currency: "EUR" });
+
+/*
+==============================================================
+get incomes data from localStorage
+==============================================================
+*/
+function getIncomeData() {
+    let income_string = localStorage.getItem('incomeData');
+    if (income_string != null)
+        income_array = JSON.parse(income_string);
+}
+
+/*
+==============================================================
+get expenses data from localStorage
+==============================================================
+*/
+function getExpenseData() {
+    let expenses_string = localStorage.getItem('expensesData');
+    if (expenses_string != null)
+        expenses_array = JSON.parse(expenses_string);
+}
+
+/*
+==============================================================
+ Update income_array and add data to localStorage 
+==============================================================
+*/
 function pushIncomesData() {
-    addData();
-
-    //======= push data into array and generate table with it =====
-    array.push({
+    getIncomeData();
+    //= push data into income_array and generate table with it =
+    income_array.push({
         description: description.value,
-        amount: amount.value,
+        amount: (amount.value).replace(/\,/g, ''),
+        dateItm: getTime(),
     })
-
     //====== set items on localStorage
-    localStorage.setItem('localData', JSON.stringify(array))
+    localStorage.setItem('incomeData', JSON.stringify(income_array))
     incomeGenerator();
+    chartHeight();
 }
 
 
+/*
+==============================================================
+ Update expenses_array and addData to localStorage 
+==============================================================
+*/
 function pushExpenses() {
-    addData1();
-
-    //======= push data into array1 and generate table with it =====
-    array1.push({
-            description: description.value,
-            amount: amount.value,
-        })
-        //====== set items on localStorage
-    localStorage.setItem('localData', JSON.stringify(array1))
+    getExpenseData();
+    //= push data into expenses_array and generate table with it =
+    expenses_array.push({
+        description: description.value,
+        amount: (amount.value).replace(/\,/g, ''),
+        dateItm: getTime(),
+    })
+    //====== set items on localStorage
+    localStorage.setItem('expensesData', JSON.stringify(expenses_array))
     ExpGenerator();
+    chartHeight();
 }
 
 
-///$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-//==================Generator for Income Table =================
-
+/*
+==============================================================
+Generator for Income Table 
+==============================================================
+*/
 function incomeGenerator() {
+    getIncomeData();
 
-    let incomeTable = document.getElementById('table_income');
-    let rows = incomeTable.insertRow();
-    let cell1 = rows.insertCell();
-    let cell2 = rows.insertCell();
-    let cell3 = rows.insertCell();
-    let cell4 = rows.insertCell();
-    let button = document.createElement('input')
-    let hiddenDiv = document.createElement('div')
-    hiddenDiv.setAttribute('type', 'number')
-    hiddenDiv.setAttribute('class', 'amount_cell')
-    cell1.setAttribute('contentEditable', 'true');
-    //cell2.setAttribute('contentEditable', 'true');
-    button.setAttribute('type', 'button')
-    button.setAttribute('onclick', 'deleteIncomeRow(this)')
-    button.setAttribute('class', 'income_del')
-    cell4.appendChild(button)
-    cell1.innerHTML = description.value
-        //cell2.innerHTML = amount.value
-    cell2.innerHTML = formatter.format(amount.value)
-    amountCell.textContent = amount.value
-    cell2.appendChild(hiddenDiv)
-    cell3.innerHTML = dateFormat
-
-
-    //============== Changing field inputs ====================
-
-    /*for (let i = 1; i < incomeTable.rows.length; i++) {
-        incomeTable.rows[i].onclick = function() {
-            rIndex = this.rowIndex;
-            // console.log(rIndex);
-            description.value = this.cells[0].innerHTML;
-            amount.value = this.cells[1].innerHTML;
-            dateFormat = this.cells[2].innerHTML;
-        };
+    //======== delete duplicate table row if it exist ========
+    let tableLength = incomeTable.rows.length;
+    while (--tableLength) {
+        incomeTable.deleteRow(tableLength)
     }
-    let edit = document.querySelector('.edit')
-    edit.addEventListener('click', function() {
-        incomeTable.rows[rIndex].cells[0].innerHTML = description.value;
-        incomeTable.rows[rIndex].cells[1].innerHTML = amount.value
-        incomeTable.rows[rIndex].cells[2].innerHTML = dateFormat;
-    })*/
 
+    for (i = 0; i < income_array.length; i++) {
+        let rows = `<tr>
+        <th>${'0' + (i + 1)}</th>
+        <th class="desc-ths">${income_array[i].description}</th>
+        <th>${new Intl.NumberFormat().format(Math.round(income_array[i].amount))}</th>       
+        <th>${income_array[i].dateItm}</th>
+        <th class="btn-ths"><button class="edit-icon" onclick="populateIncomeInput(this)"><i class="far fa-edit"></i></button>
+        <button class="delete-icon" onclick="deleteIncomeRow(this)"><i class="far fa-trash-alt"></i></button></th>
+     </tr>`
+        incomeTable.innerHTML += rows
+    }
+}
+incomeGenerator();
+
+/*
+==============================================================
+EditIncomeData function for Income Table 
+==============================================================
+*/
+
+function populateIncomeInput(td) {
+    rIndex = td.parentElement.parentElement
+    const btnSel = document.querySelector(".select");
+    const btnCanc = document.querySelector(".cancel");
+
+    description.value = rIndex.cells[1].innerHTML;
+    amount.value = rIndex.cells[2].innerHTML;
+
+    btnSavExp.style.display = 'none';
+    btnSavInc.style.display = 'block';
+    btnSel.style.display = 'none';
+    btnData.style.display = 'none';
+    btnCanc.style.display = 'block';
+    fieldset.style.display = 'block';
+    showFields.style.display = "none";
+    fieldset.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
 }
 
-//================ deleteIncomeRow() function for Income Table =================
-
-function deleteIncomeRow(row) {
-    let income = row.parentNode.parentNode.rowIndex;
-    incomeTable.deleteRow(income);
-}
-
-//================Generator for Expenses Table =================
-
-function ExpGenerator() {
-
-    let expenseTable = document.getElementById('table_expenditure');
-    let rows = expenseTable.insertRow();
-    let cella = rows.insertCell();
-    let cellb = rows.insertCell();
-    let cellc = rows.insertCell();
-    let celld = rows.insertCell();
-    let btn = document.createElement('input')
-    let hiddenDivE = document.createElement('div')
-    hiddenDivE.setAttribute('type', 'number')
-    hiddenDivE.setAttribute('class', 'amount_cellB')
-    cella.setAttribute('contentEditable', 'true');
-    // cellb.setAttribute('contentEditable', 'true');
-    btn.setAttribute('type', 'button')
-    btn.setAttribute('class', 'expense_del')
-    btn.setAttribute('onclick', 'deleteExpenseRow(this)')
-    celld.appendChild(btn)
-    cella.innerHTML = description.value
-    cellb.setAttribute('class', 'amount_cellB')
-    amountCellB.textContent = amount.value
-    cellb.appendChild(hiddenDivE)
-    cellb.innerHTML = formatter.format(amount.value)
-    cellc.innerHTML = dateFormat
-}
-
-//================ deleteIncomeRow() function for Expenses Table =================
-
-function deleteExpenseRow(row) {
-    let expense = row.parentNode.parentNode.rowIndex;
-    expenseTable.deleteRow(expense);
-}
-
-//=====================onclick function for income & expenditure selection =========
-
-const btnData = document.querySelector('.btn_submit')
-btnData.addEventListener('click', function() {
-    let select = document.getElementById('Income_expenditure').value;
-    if (select == 'Income') {
-        // incomeGenerator()
-        pushIncomesData()
-    } else if (select == 'Expenditure') {
-        //  ExpGenerator()
-        pushExpenses()
-    } else {}
+//=========== save edited data ========//
+btnSavInc.addEventListener('click', function () {
+    if (rIndex.rowIndex) {
+        let curIndex = rIndex.rowIndex - 1
+        if (checkInputs() === true) {
+            income_array[curIndex].description = description.value;
+            income_array[curIndex].amount = (amount.value).replace(/\,/g, '');
+            incomeTable.rows[rIndex.rowIndex].cells[1].innerHTML = description.value;
+            incomeTable.rows[rIndex.rowIndex].cells[2].innerHTML = `${new Intl.NumberFormat().format(Math.round((amount.value).replace(/\,/g, '')))}`
+        }
+    }
+    //====== set income_array to localStorage ======
+    localStorage.setItem('incomeData', JSON.stringify(income_array));
+    totalIncomes();
+    accountBalance();
+    chartHeight();
+    incomeLegend.innerHTML = "";
+    expenseLegend.innerHTML = "";
+    drawDougnutChart();
+    drawPieChartExp();
 })
 
 
+/*
+==============================================================
+deleteIncomeRow function for Income Table
+==============================================================
+*/
+function deleteIncomeRow(row) {
 
-//======================onclick listener function for summing Income =======================
-
-/*let btnIncome = document.querySelector('.btn_submit')
-
-function totalIncomes() {
-    btnIncome.addEventListener('click', function() {
-        let tbl = document.getElementById('table_income').getElementsByTagName("td");
-        let sum = 0;
-        for (let i = 0; i < tbl.length; i++) {
-            if (tbl[i].className == "amount_cell") {
-                sum += isNaN(tbl[i].innerHTML) ? 0 : parseInt(tbl[i].innerHTML)
+    if (confirm('Please Confirm Data Deletion')) {
+        let curRowIndex = row.parentNode.parentNode.rowIndex;
+        for (i = 0; i < income_array.length; i++) {
+            if (curRowIndex - 1 === i) {
+                income_array[i].description = "";
+                income_array[i].amount = "";
+                income_array[i].dateItm = "";
+                income_array.splice(i, 1);
             }
         }
-        totalIncome.textContent = `Total Incomes are ${sum.toFixed(2)} €`
-        incomeInput.textContent = `${sum.toFixed(2)}`
-    })
+        //====== set income_array to localStorage ======
+        localStorage.setItem('incomeData', JSON.stringify(income_array))
+        incomeTable.deleteRow(curRowIndex)
+        totalIncomes();
+        accountBalance();
+        chartHeight();
+        incomeLegend.innerHTML = "";
+        expenseLegend.innerHTML = "";
+        drawDougnutChart();
+        drawPieChartExp();
+    }
 }
-totalIncomes()*/
+
+/*
+==============================================================
+Generator for Expenses Table
+==============================================================
+*/
+function ExpGenerator() {
+    getExpenseData();
+    //=========== delete duplicate table row if it exist ========
+    let tableLength = expenseTable.rows.length;
+    while (--tableLength) {
+        expenseTable.deleteRow(tableLength)
+    }
+
+    for (i = 0; i < expenses_array.length; i++) {
+        let row = `<tr>
+        <th>${'0' + (i + 1)}</th>
+        <th class="desc-ths">${expenses_array[i].description}</th>
+        <th>${new Intl.NumberFormat().format(Math.round(expenses_array[i].amount))}</th>     
+        <th>${expenses_array[i].dateItm}</th>
+        <th class="btn-ths"><button class="edit-icon1" onclick="populateExpenseInput(this)"><i class="far fa-edit"></i></button>
+        <button class="delete-icon1" onclick= "deleteExpenseRow(this)"><i class="far fa-trash-alt"></i></button></th>
+     </tr>`
+        expenseTable.innerHTML += row
+    }
+}
+ExpGenerator();
+
+/*
+==============================================================
+EditExpenseData function for Expense Table
+==============================================================
+*/
+function populateExpenseInput(td) {
+    rIndex2 = td.parentElement.parentElement
+    const btnSel = document.querySelector(".select");
+    const btnCanc = document.querySelector(".cancel");
+
+    description.value = rIndex2.cells[1].innerHTML;
+    amount.value = rIndex2.cells[2].innerHTML;
+
+    btnSavExp.style.display = 'block';
+    btnSavInc.style.display = 'none';
+    btnSel.style.display = 'none';
+    btnData.style.display = 'none';
+    btnCanc.style.display = 'block';
+    fieldset.style.display = 'block';
+    showFields.style.display = "none";
+    fieldset.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
+}
+
+//=========== save edited data ========//
+btnSavExp.addEventListener('click', function () {
+    if (rIndex2.rowIndex) {
+        let curIndex = rIndex2.rowIndex - 1
+        expenses_array[curIndex].description = description.value;
+        expenses_array[curIndex].amount = (amount.value).replace(/\,/g, '');
+        expenseTable.rows[rIndex2.rowIndex].cells[1].innerHTML = description.value;
+        expenseTable.rows[rIndex2.rowIndex].cells[2].innerHTML = `${new Intl.NumberFormat().format(Math.round((amount.value).replace(/\,/g, '')))}`
+    }
+    //====== set expenses_array to localStorage ======
+    localStorage.setItem('expensesData', JSON.stringify(expenses_array))
+    totalExpenses();
+    accountBalance();
+    chartHeight();
+    incomeLegend.innerHTML = "";
+    expenseLegend.innerHTML = "";
+    drawDougnutChart();
+    drawPieChartExp();
+})
 
 
-//====================== for Hidden Div (onclick listener function for summing Income) ==============
-// ===================== This is an auxilliary function to calculate the sum ========================
-
-let btnIncome = document.querySelector('.btn_submit')
-
-function totalIncomes() {
-    btnIncome.addEventListener('click', function() {
-        sum = 0;
-        for (let i = 0; i < amountCell.length; i++) {
-            let index = amountCell.textContent;
-
-            if (index && index.indexOf("totalIncome") < 0) {
-                sum += parseInt(index) || 0;
+/*
+==============================================================
+deleteExpenseRow function for Expenses Table 
+==============================================================
+*/
+function deleteExpenseRow(row) {
+    if (confirm('Please Confirm Data Deletion')) {
+        let curRowIndex = row.parentNode.parentNode.rowIndex;
+        for (i = 0; i < expenses_array.length; i++) {
+            if (curRowIndex - 1 === i) {
+                expenses_array[i].description = "";
+                expenses_array[i].amount = "";
+                expenses_array[i].dateItm = "";
+                expenses_array.splice(i, 1);
             }
         }
-        //totalIncome.textContent = `Total Incomes: ${sum.toFixed(2)} €`
-        totalIncome.textContent = `Total Incomes: ${formatter.format(sum)}`
-        incomeInput.textContent = `${sum.toFixed(2)}`
-    })
+        //====== set expenses_array to localStorage ======
+        localStorage.setItem('expensesData', JSON.stringify(expenses_array));
+        expenseTable.deleteRow(curRowIndex);
+        totalExpenses();
+        accountBalance();
+        chartHeight();
+        incomeLegend.innerHTML = "";
+        expenseLegend.innerHTML = "";
+        drawDougnutChart();
+        drawPieChartExp();
+    }
+}
+
+
+/*
+==============================================================
+input fields validation functions
+==============================================================
+*/
+function setErrorStyle(input, span, msg) {
+    input.style.borderColor = 'red'
+    document.querySelector(span).innerHTML = msg;
+    document.querySelector(span).style.display = 'block';
+}
+
+function setSuccessStyle(input, span) {
+    input.style.borderColor = 'green'
+    document.querySelector(span).style.display = 'none';
+}
+
+
+function checkInputs() {
+    let isValid = true;
+    let message = ['Description is required', 'Amount is required', 'Please enter valid number']
+    const regex = /^[0-9, ,,.]+$/;
+
+    if (description.value.trim() === "" || description.value.trim() === null) {
+        setErrorStyle(description, '.error-msgdesc', message[0])
+        isValid = false
+    } else {
+        setSuccessStyle(description, '.error-msgdesc');
+    }
+
+    if (!amount.value.match(regex)) {
+        setErrorStyle(amount, '.error-msgamt', message[2])
+        isValid = false
+    } else {
+        setSuccessStyle(amount, '.error-msgamt');
+    }
+
+    return isValid
+}
+
+
+/*
+==============================================================
+function to select income & expenditure 
+==============================================================
+*/
+const btnData = document.querySelector('.btn_submit')
+btnData.addEventListener('click', selectCategory)
+
+function selectCategory() {
+    const select = document.querySelector('input[name="select"]:checked').value;
+    if (checkInputs() === true) {
+        if (select == 'income') {
+            pushIncomesData();
+
+        } else if (select == 'expenses') {
+            pushExpenses();
+
+        } else { }
+        inputFields()
+        fieldset.style.display = "none"
+        showFields.style.display = "block"
+    }
+}
+
+/*
+==============================================================
+function to sum up Income
+==============================================================
+*/
+btnData.addEventListener('click', totalIncomes)
+function totalIncomes() {
+
+    let incomeAmt = (JSON.parse(window.localStorage.getItem('incomeData')));
+
+    if (incomeAmt) {
+        let icomeSummary = incomeAmt.map((total => ((total.amount).replace(/\,/g, ''))))
+        let reducer = icomeSummary.reduce(function (prev, curr) {
+            return (Number(prev || 0)) + (Number(curr || 0));
+        }, 0);
+
+        totalIncome.textContent = `Total Incomes: ${formatter.format(reducer)}`
+        localStorage.setItem('income', reducer);
+
+        curincome.textContent = `${formatter.format((JSON.parse(window.localStorage.getItem('income'))))}`
+    }
 }
 totalIncomes();
+totalIncome.textContent = `Total Incomes: ${formatter.format((JSON.parse(window.localStorage.getItem('income'))))}`
+curincome.textContent = `${formatter.format((JSON.parse(window.localStorage.getItem('income'))))}`
 
 
-
-
-
-
-
-//================onclick listener function for summing Expenses ================================
-
-let btnExp = document.querySelector('.btn_submit')
-
-function totalExpenses() {
-    btnExp.addEventListener('click', function() {
-        sum = 0;
-        for (let i = 0; i < amountCellB.length; i++) {
-            let index = amountCellB.textContent;
-
-            if (index && index.indexOf("totalIncome") < 0) {
-                sum += parseInt(index) || 0;
-            }
-        }
-        // totalExpense.textContent = `Total Expenses: ${sum.toFixed(2)} €`
-        totalExpense.textContent = `Total Expenses: ${formatter.format(sum)}`
-        expenInput.textContent = `${sum.toFixed(2)} €`
-    })
-}
-totalExpenses()
-
-
-/*let btnExp = document.querySelector('.btn_submit')
+/*
+==============================================================
+function to sum up Expenses
+==============================================================
+*/
+btnData.addEventListener('click', totalExpenses)
 
 function totalExpenses() {
-    btnExp.addEventListener('click', function() {
-        let tbl = document.getElementById('table_expenditure').getElementsByTagName("td");
-        let sum = 0;
-        for (let i = 0; i < tbl.length; i++) {
-            if (tbl[i].className == "amount_cell") {
-                sum += isNaN(tbl[i].textContent) ? 0 : parseInt(tbl[i].textContent);
-            }
-        }
-        totalExpense.textContent = `Total Expenses are ${sum.toFixed(2)} €`
-        expenInput.textContent = `${sum.toFixed(2)} €`
-    })
+
+    let expensesAmt = (JSON.parse(window.localStorage.getItem('expensesData')));
+
+    if (expensesAmt) {
+        let expenseSummary = expensesAmt.map((total => ((total.amount).replace(/\,/g, ''))))
+        let reducer = expenseSummary.reduce(function (prev, curr) {
+            return (Number(prev || 0)) + (Number(curr || 0));
+        }, 0);
+        totalExpense.textContent = `Total Expenses: ${formatter.format(reducer)}`
+        localStorage.setItem('expenses', reducer);
+
+        curiexpense.textContent = `${formatter.format((JSON.parse(window.localStorage.getItem('expenses'))))}`
+    }
 }
-totalExpenses()*/
+totalExpenses();
+totalExpense.textContent = `Total Expenses: ${formatter.format((JSON.parse(window.localStorage.getItem('expenses'))))}`
+curiexpense.textContent = `${formatter.format((JSON.parse(window.localStorage.getItem('expenses'))))}`
 
 
-//======================== Acount Ballance Function =========================
-let result
-let accBal = document.querySelector('.btn_submit')
-accBal.addEventListener('click', accountBalance)
+/*
+==============================================================
+Acount Ballance Function
+==============================================================
+*/
+btnData.addEventListener('click', accountBalance);
 
 function accountBalance() {
 
-    let incomes = document.querySelector('#incomeInput').textContent
-    let expenses = document.querySelector('#expenInput').textContent
-    let result = parseInt(incomes) - parseInt(expenses);
-
-    // balance.textContent = `You have ${result} € in your account`
-    balance.textContent = `You have ${formatter.format(result)} in your account`
+    const incomes = (JSON.parse(window.localStorage.getItem('income')));
+    const expenses = (JSON.parse(window.localStorage.getItem('expenses')));
+    let result = (Number(incomes)) - (Number(expenses));
+    localStorage.setItem('accBalance', result)
 
     if (result <= 0 || result == isNaN) {
         balance.style.color = 'red'
+        curbalance.style.color = 'red'
     } else {
         balance.style.color = 'blue'
+        curbalance.style.color = 'blue'
     }
+    balance.textContent = `You have ${formatter.format(result)} in your account`
+    curbalance.textContent = `Current Balance: ${formatter.format(result)}`
 }
-accountBalance()
-    // ===================== clear localStorage functions ================================
-
-/*function edit() {
-    localStorage.clear();
-}*/
+accountBalance();
+balance.textContent = `You have: ${formatter.format((JSON.parse(window.localStorage.getItem('accBalance'))))}`
+curbalance.textContent = `Current Balance: ${formatter.format((JSON.parse(window.localStorage.getItem('accBalance'))))}`

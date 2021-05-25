@@ -4,136 +4,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Balance</title>
+    <title>Account | Balance</title>
     <link rel="stylesheet" href="./normalize.css">
     <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+        integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
 </head>
 
 <body>
-    <div class="wrapper"> 
-        <div class="head">
-            <div class="container">
-                <div class="header">
-                    <div class="header_content">
-                        <h1>ACCOUNT BALANCE</h1>
-                        <form class="form">
-                            <fieldset class="fieldset">
-                                <legend>Input Data</legend>
-                                <div class="fieldset_content">
-                                    <div class="description">
-                                        <input type="text" id="description" placeholder="Description" required>
-                                    </div>
-                                    <div class="amount"><input type="text" id="amount" placeholder="Amount" required></div>
-
-                                    <!-- <div class="label"><label for="Income_expenditure">Select:</label></div>-->
-                                    <div class="select">
-                                        <select id="Income_expenditure">
-                                            <option selected>--Select--</option>
-                                            <option value="Income">Income</option>
-                                            <option value="Expenditure">Expenditure</option>
-                                        </select>
-                                    </div>
-                                    <input type="button" class="btn_submit" value="Add Data">
-                                    <input type="reset" value="Clear Input Field" class="btn_clear">
-                                </div>
-                                <!--<input type="button" value="Add Data" onclick="tableGenerator();">-->
-                            </fieldset>
-                        </form>
-                    </div>
-
+    <div class="account-wrapper">
+        <div class="header-content">
+            <h1>EXPENSES WALLET</h1>
+            <!-- Date section -->
+            <div class="show-date">
+                <div class="time"></div>
+                <div class="show-date__wrapper">
+                    <h5 class="logo">STBUGYEI😊</h5>
+                    <div class="day"></div>
+                    <div class="month-day"></div>
                 </div>
             </div>
-        </div>
-        <div class="main">
-            <div class="container">
-                <div class="container_first">
-                    <div class="container_first--income">
-                        <h3 class="h3">INCOMES</h3>
-                        <table id="table_income">
-                            <tr>
-                                <th>Income Description</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Delete Row</th>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="container_first--expenditure">
-                        <h3 class="h3">EXPENSES</h3>
-                        <table id="table_expenditure">
-                            <tr>
-                                <th>Expenses Description</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Delete Row</th>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="container_second">
-                    <div class="container_second--income">
-                    </div>
-                    <div class="container_second--expenditure">
-                    </div>
-                    <input type="hidden" id="incomeInput">
-                    <input type="hidden" id="expenInput">
-                </div>
-                <div class="balance">
-                    <div class="balance_text">
-                        <h3 class="h3">BALANCE</h3>
-                    </div>
-                    <div class="balance_content">
-                        <p class="balance_output"></p>
-                    </div>
-                </div>
+            <!-- Banner section -->
+            <!-- <h3 class="date-item"></h3> -->
+            <ul class="header-content__item">
+                <li>
+                    <button class="income-icon">
+                        <i class="fas fa-euro-sign"></i>
+                        <i class="fas fa-coins"></i>
+                    </button>
+                    <p>Income</p>
+                    <p class="curincome"></p>
+                </li>
+                <li>
+                    <button class="income-icon">
+                        <i class="fas fa-cart-arrow-down"></i>
+                    </button>
+                    <p>Expense</p>
+                    <p class="curiexpense"></p>
+                </li>
+            </ul>
+
+            <div class="display-income_expense">
+                <input type="button" value="Show Income Details" class="btn_income">
+                <input type="button" value="Show Expenses Details" class="btn_expense">
+                <input type="button" value="Show Dashboard" class="btn_dashboard">
             </div>
-            <div class="footer">
-                <div class="container">
-                    <div class="footer_bottom">
+            <h3 class="curbalance"></h3>
 
-                        <div class="icon_group">
-                            <div class="bottom_icons">
-                                <div class="tweeter">
-                                    <a href="#"><img class="footer_bottom--subimg" src="./image/twitter.png"></a>
-                                </div>
+            <!-- Form section -->
+            <form id="form" class="form">
+                <fieldset class="fieldset">
+                    <legend>Add Transaction</legend>
+                    <div class="error-msg"></div>
+                    <div class="fieldset_content">
+                        <div class="discription-amount">
+                            <div class="description">
+                                <input type="text" name="description" id="description" placeholder="Description">
+                                <small class="error-msgdesc"></small>
                             </div>
-                            <div class="bottom_icons">
-                                <div class="facebook">
-                                    <a href="#"><img class="footer_bottom--subimg" src="./image/facebook.png"></a>
-                                </div>
+                            <div class="amount">
+                                <input type="text" name="amount" id="amount" placeholder="Amount">
+                                <small class="error-msgamt"></small>
                             </div>
-                            <div class="bottom_icons">
-                                <div class="linkedin">
-                                    <a href="#"><img class="footer_bottom--subimg" src="./image/linkedin.png"></a>
+                        </div>
+
+                        <div class="select-options">
+                            <div class="select">
+                                <div class="select-content">
+                                    <div class="check-income__wrapper">
+                                        <label for="income">
+                                            <input type="radio" name="select" value="income" id="income" checked>
+                                            <div class="check-income">
+                                                <span class="check-text">Income</span> <span class="check-icon"><i
+                                                        class="fas fa-mug-hot"></i></span>
+                                            </div>
+                                        </label>
+                                    </div>
+
+                                    <div class="check-expense__wrapper">
+                                        <label for="expenses">
+                                            <input type="radio" name="select" value="expenses" id="expenses">
+                                            <div class="check-income">
+                                                <span class="check-text">Expenses</span> <span class="check-icon"><i
+                                                        class="fas fa-mug-hot"></i></span>
+                                            </div>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="bottom_icons">
-                                <div class="github">
-                                    <a href="#"><img class="footer_bottom--subimg" src="./image/github (1).png"></a>
-                                </div>
-                            </div>
+                            <input type="hidden" name="date" id="date" class="date-item">
+                            <small class="error-msgdate"></small>
 
-                            <div class="bottom_icons">
-                                <div class="pinterest">
-                                    <a href="#"><img class="footer_bottom--subimg" src="./image/pinterest.png"></a>
-                                </div>
-                            </div>
+                            <input type="button" value="Submit Data" class="btn_submit">
+                            <input type="button" value="Cancel" class="cancel">
+                            <input type="button" value="Save Income" class="edit">
+                            <input type="button" value="Save Expenses" class="editEx">
 
                         </div>
-                        <!--<div class="clearStorage">
-                            <a href="#"><img class="footer_bottom--subimg" src="./image/cancel.svg"></a>
-                      </div>-->
-
-
                     </div>
+                </fieldset>
+            </form>
+            <input type="button" value="+ Add A Transaction" class="btn_trans">
+        </div>
+
+        <!-- Chart section -->
+        <div class="chart-wrapper">
+            <div>
+                <h2 class="chart-header"><span>DASHBOARD</span>
+                    <span style="color:blue;">CHARTS</span>
+                </h2>
+                <div class="chartcontent">
+                    <div class="barchart">
+                        <div class="barchart-content">
+                            <div class="income-height"></div>
+                            <div class="expense-height"></div>
+                        </div>
+                        <div class="barchart-legend">
+                            <span><i class="fas fa-circle"></i> Incomes</span>
+                            <span><i class="fas fa-circle"></i> Expenses</span>
+                        </div>
+                    </div>
+
+                    <div class="piechart">
+                        <div class="piechart-income__wrapper">
+
+                            <div class="show-prelimtext">
+                                No Data Available
+                            </div>
+                            <div class="canvas-wrapper">
+                                <canvas id="incomepiechart" width="240" height="260"></canvas>
+                            </div>
+
+                            <div id="income-legend">
+                            </div>
+                        </div>
+
+                        <div class="piechart-expense__wrapper">
+                            <div class="show-prelimtext1">
+                                No Data Available
+                            </div>
+                            <div class="canvas-wrapper">
+                                <canvas id="expensepiechart" width="240" height="260"></canvas>
+                            </div>
+                            <div id="expense-legend">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table section -->
+        <div class="container_first">
+            <div class="container_first--income">
+                <h3>INCOMES</h3>
+                <table id="table_income">
+                    <tr class="first-row">
+                        <th>#No</th>
+                        <th>Income Description</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Edit Options</th>
+                    </tr>
+                </table>
+
+                <div class="container_first--ivalue">
+                </div>
+            </div>
+
+            <div class="container_first--expenditure">
+                <h3>EXPENSES</h3>
+                <table id="table_expenditure">
+                    <tr class="first-row">
+                        <th>#No</th>
+                        <th>Expenses Description</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Edit Options</th>
+                    </tr>
+                </table>
+
+                <div class="container_first--evalue">
                 </div>
             </div>
 
         </div>
-
+        <div class="balance">
+            <h2>BALANCE</h2>
+            <h3 class="balance_output"></h3>
+        </div>
+        <button class="scroll"><i class="fas fa-arrow-up"></i></button>
+    </div>
 </body>
-<script src="cleave.js"></script>
+<!-- <script src="cleave.js"></script> -->
 <script src="expenditure.js"></script>
+<script src="togglestyles.js"></script>
 
 </html>
